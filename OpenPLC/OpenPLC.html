@@ -1,0 +1,90 @@
+<script type="text/javascript">
+    RED.nodes.registerType('OpenPLC', {
+        category: 'function',
+        color: '#ffcc66',
+        defaults: {
+            name: { value: "" },
+            host: { value: "127.0.0.1", required: true},
+            port: { value: 502, required: true, validate: RED.validators.number()},
+            programport: { value: 8080, required: true, validate: RED.validators.number()},
+            program: { value: "", required: true },
+            outputs: { value: 1 },
+            outputoffset: {
+                value: 0, required: true, validate: function (v) {
+                    return v >= 0
+                }
+            },
+            rate: {
+                value: "250", required: true, validate: function (v) {
+                    return v > 0
+                }
+            },
+            rateUnit: {
+                value: "ms", required: true, validate: function (v) {
+                    return "ms" === v || "s" === v || "m" === v || "h" === v;
+                }
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "serial.png",
+        label: function() {
+            return this.name || "OpenPLC";
+        },
+        oneditprepare: function() {
+            $("#node-input-outputs").spinner({
+                min: 1
+            });
+
+            $("#node-input-outputoffset").spinner({
+                min: 0
+            });
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="OpenPLC">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-host"><i class="icon-bookmark"></i> Host</label>
+        <input type="text" id="node-input-host">
+    </div>
+    <div class="form-row">
+        <label for="node-input-port"><i class="icon-bookmark"></i> Port</label>
+        <input type="text" id="node-input-port">
+    </div>
+    <div class="form-row">
+        <label for="node-input-rate"><i class="icon-bookmark"></i> Poll rate</label>
+        <input type="number" id="node-input-rate" placeholder="1-65535" style="max-width:120px">
+        <select id="node-input-rateUnit" style="max-width:160px">
+            <option value="ms">millisecond(s)</option>
+            <option value="s">second(s)</option>
+            <option value="m">minute(s)</option>
+            <option value="h">hour(s)</option>
+        </select>
+    </div>
+    <hr>
+    <div class="form-row">
+        <label for="node-input-programport"><i class="icon-bookmark"></i> Prog port</label>
+        <input type="text" id="node-input-programport">
+    </div>
+    <div class="form-row">
+        <label for="node-input-program"><i class="icon-file"></i> Program</label>
+        <textarea rows="15" cols="60" id="node-input-program" style="width:70%;"></textarea>
+    </div>
+     <div class="form-row">
+        <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
+        <input id="node-input-outputs" style="width: 60px;" value="1">
+    </div>
+    <div class="form-row">
+        <label for="node-input-outputoffset"><i class="icon-bookmark"></i> Offset</label>
+        <input id="node-input-outputoffset" style="width: 60px;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="OpenPLC">
+    <p>A node that represents an OpenPLC instance.</p><p>Enter the host and port of the OpenPLC instance to create a connection. The program port is the port where OpenPLC exposes the webservice to upload PLC programs in ST format. The program can be directly entered in the node and will automatically be deployed to the OpenPLC instance. The outputs of the node are the coil outputs starting from %QX0.0. Using the offset, the starting output can be changed.</p><p>The node can write to the coil and holding registers of the PLC. This can be done with the included <i>OpenPLC-Input</i> node or by sending a JSON message to this node.</p><p>The message <code>{"value": true, "register": "X", "byte": 0, "bit": 2}</code> corresponds to setting %QX0.2 to true.</p>
+</script>
