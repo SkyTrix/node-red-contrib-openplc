@@ -6,10 +6,10 @@ module.exports = function (RED) {
         this.byte = config.byte;
         this.bit = config.bit;
 
-        var node = this;
+        let node = this;
 
         node.on('input', function (msg) {
-            var payload = {};
+            let payload = {};
             payload.value = msg.payload;
             payload.register = this.register;
             payload.byte = this.byte;

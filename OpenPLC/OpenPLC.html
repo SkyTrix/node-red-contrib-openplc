@@ -4,9 +4,8 @@
         color: '#ffcc66',
         defaults: {
             name: { value: "" },
-            host: { value: "127.0.0.1", required: true},
-            port: { value: 502, required: true, validate: RED.validators.number()},
-            programport: { value: 8080, required: true, validate: RED.validators.number()},
+            server: { type: "modbus-client", required: true },
+            programport: { value: 8080, required: true, validate: RED.validators.number() },
             program: { value: "", required: true },
             outputs: { value: 1 },
             outputoffset: {
@@ -49,12 +48,8 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-input-host"><i class="icon-bookmark"></i> Host</label>
-        <input type="text" id="node-input-host">
-    </div>
-    <div class="form-row">
-        <label for="node-input-port"><i class="icon-bookmark"></i> Port</label>
-        <input type="text" id="node-input-port">
+        <label for="node-input-server"><i class="icon-globe"></i> Server</label>
+        <input type="text" id="node-input-server">
     </div>
     <div class="form-row">
         <label for="node-input-rate"><i class="icon-bookmark"></i> Poll rate</label>
