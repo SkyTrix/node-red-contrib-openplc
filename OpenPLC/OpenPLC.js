@@ -195,6 +195,7 @@ module.exports = function (RED) {
         }, function (error, response, body) {
             if (error) {
                 node.status({fill: "red", shape: "ring", text: "program upload failed"});
+                node.error("program upload failed");
             }
         });
     }
