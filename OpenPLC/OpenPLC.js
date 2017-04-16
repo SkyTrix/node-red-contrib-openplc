@@ -1,5 +1,5 @@
 module.exports = function (RED) {
-    let mbBasics = require('../node_modules/node-red-contrib-modbus/modbus/modbus-basics');
+    const mbBasics = require('../node_modules/node-red-contrib-modbus/modbus/modbus-basics');
 
     function OpenPLC (config) {
         RED.nodes.createNode(this, config);
@@ -12,8 +12,8 @@ module.exports = function (RED) {
         this.outputs = config.outputs;
         this.outputoffset = config.outputoffset;
 
-        let node = this;
-        let modbusClient = RED.nodes.getNode(config.server);
+        const node = this;
+        const modbusClient = RED.nodes.getNode(config.server);
         let timerID = null;
         let timeoutOccurred = false;
 
@@ -110,7 +110,7 @@ module.exports = function (RED) {
         };
 
         node.onModbusReadDone = function (response) {
-            var arr = response.data.map(function (x) {
+            const arr = response.data.map(function (x) {
                 return { payload: x };
             });
             node.send(arr.slice(0, node.outputs));
@@ -180,8 +180,8 @@ module.exports = function (RED) {
         }
 
         // Upload program to the PLC using a multipart form request
-        var request = require('request');
-        var body = '------MNuE24x1ePo7oAAK\r\nContent-Disposition: form-data; name="file"; filename="duration"\r\nContent-Type: application/octet-stream\r\n\r\n';
+        const request = require('request');
+        let body = '------MNuE24x1ePo7oAAK\r\nContent-Disposition: form-data; name="file"; filename="duration"\r\nContent-Type: application/octet-stream\r\n\r\n';
         body += this.program;
         body += '\n\r\n------MNuE24x1ePo7oAAK\r\nContent-Disposition: form-data; name="submit"\r\n\r\nUpload Program\r\n------MNuE24x1ePo7oAAK--';
 

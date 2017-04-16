@@ -6,14 +6,14 @@ module.exports = function (RED) {
         this.byte = config.byte;
         this.bit = config.bit;
 
-        let node = this;
+        const node = this;
 
         node.on('input', function (msg) {
-            let payload = {};
+            const payload = {};
             payload.value = msg.payload;
-            payload.register = this.register;
-            payload.byte = this.byte;
-            payload.bit = this.bit;
+            payload.register = node.register;
+            payload.byte = node.byte;
+            payload.bit = node.bit;
             msg.payload = payload;
 
             node.send(msg);
