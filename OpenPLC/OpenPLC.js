@@ -141,6 +141,10 @@ module.exports = function (RED) {
                 return;
             }
 
+            if (statusValue.search('active') !== -1 || statusValue === 'polling') {
+                timeoutOccurred = false;
+            }
+
             let statusOptions = mbBasics.set_node_status_properties(statusValue, false);
             node.status({
                 fill: statusOptions.fill,
@@ -155,6 +159,7 @@ module.exports = function (RED) {
             if (err) {
                 switch (err.message) {
                     case 'Timed out':
+                        timeoutOccurred = true;
                         setNodeStatusTo('timeout');
                         working = true;
                         break;
