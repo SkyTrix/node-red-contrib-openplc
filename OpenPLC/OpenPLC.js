@@ -24,9 +24,9 @@ module.exports = function (RED) {
         };
 
         node.onModbusConnect = function () {
-            if (!timerID) {
-                timerID = setInterval(node.modbusPollingRead, mbBasics.calc_rateByUnit(node.rate, node.rateUnit));
-            }
+            clearInterval(timerID);
+            timerID = setInterval(node.modbusPollingRead, mbBasics.calc_rateByUnit(node.rate, node.rateUnit));
+
             setNodeStatusTo('connected');
         };
 
@@ -36,17 +36,15 @@ module.exports = function (RED) {
 
         node.onModbusError = function () {
             setNodeStatusTo('failure');
-            if (timerID) {
-                clearInterval(timerID);
-            }
+            clearInterval(timerID);
+
             timerID = null;
         };
 
         node.onModbusClose = function () {
             setNodeStatusTo('closed');
-            if (timerID) {
-                clearInterval(timerID);
-            }
+            clearInterval(timerID);
+
             timerID = null;
         };
 
@@ -129,9 +127,8 @@ module.exports = function (RED) {
         };
 
         node.on('close', function () {
-            if (timerID) {
-                clearInterval(timerID);
-            }
+            clearInterval(timerID);
+
             timerID = null;
             setNodeStatusTo('closed');
         });
