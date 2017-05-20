@@ -1,5 +1,5 @@
 module.exports = function (RED) {
-    const mbBasics = require('../node_modules/node-red-contrib-modbus/modbus/modbus-basics');
+    const mbBasics = require('node-red-contrib-modbus/modbus/modbus-basics');
 
     function OpenPLC (config) {
         RED.nodes.createNode(this, config);
