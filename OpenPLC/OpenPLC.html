@@ -104,5 +104,12 @@
 </script>
 
 <script type="text/x-red" data-help-name="OpenPLC">
-    <p>A node that represents an OpenPLC instance.</p><p>Enter the host and port of the OpenPLC instance to create a connection. The program port is the port where OpenPLC exposes the webservice to upload PLC programs in ST format. The program can be directly entered in the node and will automatically be deployed to the OpenPLC instance. The outputs of the node are the coil outputs starting from %QX0.0. Using the offset, the starting output can be changed.</p><p>The node can write to the coil and holding registers of the PLC. This can be done with the included <i>OpenPLC-Input</i> node or by sending a JSON message to this node.</p><p>The message <code>{"value": true, "register": "X", "byte": 0, "bit": 2}</code> corresponds to setting %QX0.2 to true.</p>
+    <p>A node representing an OpenPLC instance.</p>
+    <p>Configure the connection to the OpenPLC server by entering the hostname and port number.</p>
+    <p>Use the program port to specify where OpenPLC exposes the webservice to upload PLC programs. The program can be directly written in the node and will automatically be deployed to the OpenPLC instance when the Node-RED flow is deployed.</p>
+    <p>Both digital and analog outputs can be configured. The top outputs are digital outputs, while the bottom ones are analog. The outputs contain the values of the coils and holding register of the PLC in the order of the addresses. An offset can be used to skip values which are used in the PLC as inputs.</p>
+    <p>The node can write to the coil and holding registers of the PLC which also serve as inputs. This can be done with the included <i>OpenPLC-Input</i> node or by sending a JSON message to this node that adheres to the following protocol:</p>
+    <pre>{"value": true, "register": "X", "byte": 0, "bit": 2}</code></pre>
+    <p>Specify the value in the <code>value</code> field. The PLC address is coded in the <code>register</code>, <code>byte</code> and <code>bit</code> fields. The example above evaluates to setting the coil at address %QX0.2</p>
+    <p>See the <a href="http://www.openplcproject.com/scada" target="_blank">OpenPLC documentation</a> for more information on the addresses.</p>
 </script>
