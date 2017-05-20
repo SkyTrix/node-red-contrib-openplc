@@ -9,8 +9,10 @@ module.exports = function (RED) {
         this.programport = config.programport;
         this.rate = config.rate;
         this.rateUnit = config.rateUnit;
-        this.outputs = config.outputs;
-        this.outputoffset = config.outputoffset;
+        this.digitaloutputs = config.digitaloutputs;
+        this.analogoutputs = config.analogoutputs;
+        this.digitaloutputoffset = config.digitaloutputoffset;
+        this.analogoutputoffset = config.analogoutputoffset;
 
         const node = this;
         const modbusClient = RED.nodes.getNode(config.server);
@@ -84,7 +86,7 @@ module.exports = function (RED) {
                 quantity: 1
             };
 
-            modbusClient.emit('writeModbus', msg, node.onModbusWriteDone, node.onModbusWriteError);
+            modbusClient.emit('writeModbus', msg, function() {}, node.onModbusWriteError);
         });
 
         node.modbusPollingRead = function () {
@@ -93,37 +95,64 @@ module.exports = function (RED) {
                 return;
             }
 
-            // read coils
-            let msg = {
-                topic: 'polling',
-                from: node.name,
-                payload: {
-                    unitid: 1,
-                    fc: 1,
-                    address: node.outputoffset,
-                    quantity: node.outputs
-                }
-            };
-            modbusClient.emit('readModbus', msg, node.onModbusReadDone, node.onModbusReadError);
+            if (node.digitaloutputs > 0) {
+                // read coils
+                let msgDigital = {
+                    topic: 'polling',
+                    from: node.name,
+                    payload: {
+                        unitid: 1,
+                        fc: 1,
+                        address: node.digitaloutputoffset,
+                        quantity: node.digitaloutputs
+                    }
+                };
+                modbusClient.emit('readModbus', msgDigital, node.onModbusReadDoneDigital, node.onModbusReadError);
+            }
+
+            if (node.analogoutputs > 0) {
+                // read holding register
+                let msgAnalog = {
+                    topic: 'polling',
+                    from: node.name,
+                    payload: {
+                        unitid: 1,
+                        fc: 3,
+                        address: node.analogoutputoffset,
+                        quantity: node.analogoutputs
+                    }
+                };
+                modbusClient.emit('readModbus', msgAnalog, node.onModbusReadDoneAnalog, node.onModbusReadError);
+            }
         };
 
-        node.onModbusReadDone = function (response) {
+        node.onModbusReadDoneDigital = function (response) {
             const arr = response.data.map(function (x) {
                 return { payload: x };
             });
-            node.send(arr.slice(0, node.outputs));
+
+            node.send(arr.slice(0, node.digitaloutputs));
+        };
+
+        node.onModbusReadDoneAnalog = function (response) {
+            const arr = response.data.map(function (x) {
+                return { payload: x };
+            });
+
+            // unshift null value for each digital output
+            for (i = 0; i < node.digitaloutputs; i++) {
+                arr.unshift(null);
+            }
+
+            node.send(arr);
         };
 
         node.onModbusReadError = function (err, msg) {
             setModbusError(err, msg);
         };
 
-        node.onModbusWriteDone = function (resp, msg) {
-
-        };
-
         node.onModbusWriteError = function (err, msg) {
-            setModbusError(err, msg)
+            setModbusError(err, msg);
         };
 
         node.on('close', function () {

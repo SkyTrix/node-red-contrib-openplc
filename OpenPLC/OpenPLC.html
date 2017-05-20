@@ -8,7 +8,14 @@
             programport: { value: 8080, required: true, validate: RED.validators.number() },
             program: { value: "", required: true },
             outputs: { value: 1 },
-            outputoffset: {
+            digitaloutputs: { value: 1 },
+            analogoutputs: { value: 0 },
+            digitaloutputoffset: {
+                value: 0, required: true, validate: function (v) {
+                    return v >= 0
+                }
+            },
+            analogoutputoffset: {
                 value: 0, required: true, validate: function (v) {
                     return v >= 0
                 }
@@ -31,13 +38,24 @@
             return this.name || "OpenPLC";
         },
         oneditprepare: function() {
-            $("#node-input-outputs").spinner({
-                min: 1
-            });
-
-            $("#node-input-outputoffset").spinner({
+            $("#node-input-digitaloutputs").spinner({
                 min: 0
             });
+
+            $("#node-input-analogoutputs").spinner({
+                min: 0
+            });
+
+            $("#node-input-digitaloutputoffset").spinner({
+                min: 0
+            });
+
+            $("#node-input-analogoutputoffset").spinner({
+                min: 0
+            });
+        },
+        oneditsave: function() {
+            this.outputs = (parseInt($('#node-input-digitaloutputs').val(), 0) + parseInt($('#node-input-analogoutputs').val(), 0));
         }
     });
 </script>
@@ -70,13 +88,18 @@
         <label for="node-input-program"><i class="icon-file"></i> Program</label>
         <textarea rows="15" cols="60" id="node-input-program" style="width:70%;"></textarea>
     </div>
-     <div class="form-row">
-        <label for="node-input-outputs"><i class="fa fa-random"></i> Outputs</label>
-        <input id="node-input-outputs" style="width: 60px;" value="1">
+    <hr>
+    <div class="form-row">
+        <label for="node-input-digitaloutputs"><i class="fa fa-random"></i> Digital out</label>
+        <input id="node-input-digitaloutputs" style="width: 60px;" value="1">
+        <label for="node-input-digitaloutputoffset" style="margin: 0 -20px 0 20px"><i class="fa fa-step-forward"></i> Offset</label>
+        <input id="node-input-digitaloutputoffset" style="width: 60px;">
     </div>
     <div class="form-row">
-        <label for="node-input-outputoffset"><i class="icon-bookmark"></i> Offset</label>
-        <input id="node-input-outputoffset" style="width: 60px;">
+        <label for="node-input-analogoutputs"><i class="fa fa-random"></i> Analog out</label>
+        <input id="node-input-analogoutputs" style="width: 60px;" value="1">
+        <label for="node-input-analogoutputoffset" style="margin: 0 -20px 0 20px"><i class="fa fa-step-forward"></i> Offset</label>
+        <input id="node-input-analogoutputoffset" style="width: 60px;">
     </div>
 </script>
 
