@@ -1,16 +1,17 @@
 {
   "name": "node-red-contrib-openplc",
-  "version": "0.0.3",
-  "description": "A node-red node representing an OpenPLC instance",
+  "version": "1.0.0",
+  "description": "A Node-RED node representing an OpenPLC instance",
   "author": "Cedric Vandendriessche",
   "license": "MIT",
   "dependencies": {
-    "node-red-contrib-modbus": "^1.0.9",
+    "node-red-contrib-modbus": "^1.1.0",
     "request": "^2.81.0"
   },
   "keywords": [
     "node-red",
-    "openplc"
+    "openplc",
+    "modbus"
   ],
   "engines": {
     "node": ">=6.9"
@@ -24,5 +25,14 @@
       "OpenPLC": "OpenPLC/OpenPLC.js",
       "OpenPLC-Input": "OpenPLC/OpenPLC-input.js"
     }
+  },
+  "bugs": {
+    "url": "https://github.com/SkyTrix/node-red-contrib-openplc/issues/"
+  },
+  "files": [
+    "OpenPLC"
+  ],
+  "directories": {
+    "example": "examples"
   }
 }
